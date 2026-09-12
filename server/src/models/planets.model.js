@@ -40,7 +40,7 @@ async function loadPlanets() {
       async function* (source) {
         for await (const record of source) {
           // TODO: Replace below create with insert + update operation
-          if (isHabitablePlanet(record)) savePlanet(record);
+          if (isHabitablePlanet(record)) await savePlanet(record);
         }
       },
     );
@@ -100,7 +100,7 @@ async function savePlanet(data) {
       },
     );
   } catch (error) {
-    console.error(`Could not save the planets, ${err}`);
+    console.error(`Could not save the planets, ${error}`);
   }
 }
 export { getAllPlanets, loadPlanets };

@@ -1,11 +1,14 @@
 import supertest from "supertest";
 import { app } from "../../app.js";
 import { mongoConnect, mongooseDisconnect } from "../../services/mongo.js";
+import { loadPlanets } from "../../models/planets.model.js";
+
 const version = "/v1";
 describe("launches API", () => {
   beforeAll(async () => {
     await mongoConnect();
-  });
+    await loadPlanets();
+  }, 30000);
 
   afterAll(async () => {
     await mongooseDisconnect();
