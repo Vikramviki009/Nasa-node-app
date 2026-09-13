@@ -1,0 +1,47 @@
+name: NASA Project CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    name: build & deploy
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-server: [24.x]
+
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up nodejs ${{ matrix.node-server}}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-server }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm run install-all
+
+      - name: Build Frontend Client
+        env:
+          CI: false
+        run: npm run build --prefix client
+
+      - name: Run server test suite
+        env:
+          MONGO_DB_URL: mongodb://127.0.0.1:27017/nasa
+        run: npm run test --prefix server
