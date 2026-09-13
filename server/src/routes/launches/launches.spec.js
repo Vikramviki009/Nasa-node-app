@@ -41,7 +41,7 @@ describe("launches API", () => {
         .post(`${version}/launches`)
         .send(completeLaunchData)
         .expect("Content-Type", /json/)
-        .expect(201);
+        .expect(200);
       const responseDate = new Date(response.body.launchDate).valueOf();
       const requestDate = new Date(completeLaunchData.launchDate).valueOf();
       expect(responseDate).toBe(requestDate);
